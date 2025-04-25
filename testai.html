@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>창업자 매출 분석 서비스</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2ecc71;
+            --warning: #e74c3c;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #555;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card h2 {
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .results {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1rem 0;
+        }
+        
+        .chart-container {
+            height: 300px;
+            margin: 2rem 0;
+        }
+        
+        .next-steps {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .step {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            width: calc(33.333% - 1rem);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            background: white;
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .step {
+                width: 100%;
+            }
+            
+            .tab {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>창업 성공 내비게이터</h1>
+        <p>AI 기반 자가진단으로 창업 성공률을 높이세요</p>
+    </header>
+    
+    <div class="container">
+        <div class="hero">
+            <h1>창업 매출 분석 서비스</h1>
+            <p>AI가 제공하는 맞춤형 창업 자가진단과 매출 예측 서비스로 비즈니스의 성공 가능성을 높이세요</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('diagnosis')">자가진단</button>
+            <button class="tab" onclick="switchTab('calculator')">매출 계산기</button>
+            <button class="tab" onclick="switchTab('strategy')">매출 상승 전략</button>
+        </div>
+        
+        <div id="diagnosis" class="tab-content">
+            <div class="card">
+                <h2>창업자 자가진단 테스트</h2>
+                <p>귀하의 창업 단계에 맞는 테스트를 선택하세요:</p>
+                <div style="display: flex; gap: 20px; margin-top: 20px;">
+                    <button onclick="alert('예비 창업자 테스트가 준비 중입니다.')">예비 창업자 테스트</button>
+                    <button onclick="alert('기존 창업자 테스트가 준비 중입니다.')">기존 창업자 테스트</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="calculator" class="tab-content" style="display: none;">
+            <div class="card">
+                <h2>예상 월매출 및 순수익 계산기</h2>
+                <form id="calculatorForm">
+                    <div class="form-group">
+                        <label for="price">제품/서비스 평균 가격 (원)</label>
+                        <input type="number" id="price" placeholder="ex: 20000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity">예상 월간 판매량 (개/건)</label>
+                        <input type="number" id="quantity" placeholder="ex: 100" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fixedCost">월 고정 비용 (원)</label>
+                        <input type="number" id="fixedCost" placeholder="ex: 500000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="variableCost">월 변동 비용 (원)</label>
+                        <input type="number" id="variableCost" placeholder="ex: 200000" required>
+                    </div>
+                    
+                    <button type="button" onclick="calculateProfit()">결과 계산하기</button>
+                </form>
+            </div>
+            
+            <div id="results" class="results">
+                <div class="result-card">
+                    <h2>예상 월매출</h2>
+                    <div id="revenue" class="result-value">0원</div>
+                </div>
+                
+                <div class="result-card">
+                    <h2>예상 순수익</h2>
+                    <div id="profit" class="result-value">0원</div>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="profitChart"></canvas>
+                </div>
+                
+                <div class="card">
+                    <h2>분석 결과</h2>
+                    <div id="analysis"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="strategy" class="tab-content" style="display: none;">
+            <div class="card">
+                <h2>매출 상승 전략</h2>
+                <p>자가진단 테스트와 매출 계산기를 먼저 이용한 후, 맞춤형 매출 상승 전략을 받아보세요.</p>
+                <button style="margin-top: 20px;" onclick="alert('매출 상승 전략 서비스는 결제 후 이용 가능합니다.')">맞춤형 전략 받기 (유료)</button>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h2>창업 성공을 위한 6단계</h2>
+            <p>창업 성공을 위한 체계적인 단계를 따라가세요</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>자가진단 및 결과 분석</h3>
+                    <p>창업 아이디어와 계획에 대한 객관적인 분석 제공</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>예상 매출 분석</h3>
+                    <p>데이터 기반 매출과 수익 예측 시각화</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>매출 상승 전략</h3>
+                    <p>AI 기반 맞춤형 전략 가이드</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>마케팅 교육</h3>
+                    <p>타겟 고객 발굴 및 효과적인 마케팅 전략</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <h3>전문가 상담</h3>
+                    <p>분야별 전문가와의 1:1 상담 서비스</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">6</div>
+                    <h3>지속적 피드백</h3>
+                    <p>성과 분석 및 개선점 제시</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.style.display = 'none';
+            });
+            
+            const tabButtons = document.querySelectorAll('.tab');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).style.display = 'block';
+            document.querySelector(`.tab[onclick="switchTab('${tabId}')"]`).classList.add('active');
+        }
+        
+        function calculateProfit() {
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const fixedCost = parseFloat(document.getElementById('fixedCost').value);
+            const variableCost = parseFloat(document.getElementById('variableCost').value);
+            
+            if (isNaN(price) || isNaN(quantity) || isNaN(fixedCost) || isNaN(variableCost)) {
+                alert('모든 필드에 숫자를 입력해주세요.');
+                return;
+            }
+            
+            const revenue = price * quantity;
+            const totalCost = fixedCost + variableCost;
+            const profit = revenue - totalCost;
+            
+            document.getElementById('revenue').textContent = revenue.toLocaleString() + '원';
+            document.getElementById('profit').textContent = profit.toLocaleString() + '원';
+            
+            // 결과 표시
+            document.getElementById('results').style.display = 'block';
+            
+            // 분석 결과 표시
+            let analysisText = '';
+            if (profit > 0) {
+                const profitMargin = (profit / revenue) * 100;
+                analysisText = `<p>예상 월매출은 <strong>${revenue.toLocaleString()}원</strong>이며, 예상 순수익은 <strong>${profit.toLocaleString()}원</strong>입니다.</p>
+                <p>수익률은 <strong>${profitMargin.toFixed(2)}%</strong>로 `;
+                
+                if (profitMargin < 10) {
+                    analysisText += '낮은 편입니다. 비용 절감이나 가격 전략을 재검토해 보세요.</p>';
+                } else if (profitMargin < 30) {
+                    analysisText += '적정한 수준입니다. 안정적인 비즈니스 성장이 가능합니다.</p>';
+                } else {
+                    analysisText += '매우 높은 수준입니다. 지속 가능한 비즈니스 모델로 성장이 기대됩니다.</p>';
+                }
+                
+                if (fixedCost > revenue * 0.5) {
+                    analysisText += '<p><strong>주의:</strong> 고정 비용이 매출의 50% 이상을 차지합니다. 초기 투자 비용을 줄이는 방안을 고려해보세요.</p>';
+                }
+            } else {
+                analysisText = `<p>예상 월매출(${revenue.toLocaleString()}원)이 총 비용(${totalCost.toLocaleString()}원)보다 낮아 <strong>손실이 발생할 수 있습니다</strong>.</p>
+                <p>비즈니스 모델을 재검토하고 가격 인상, 판매량 증대 또는 비용 절감 방안을 고려해보세요.</p>`;
+            }
+            
+            document.getElementById('analysis').innerHTML = analysisText;
+            
+            // 차트 생성
+            createChart(revenue, fixedCost, variableCost, profit);
+        }
+        
+        function createChart(revenue, fixedCost, variableCost, profit) {
+            const ctx = document.getElementById('profitChart').getContext('2d');
+            
+            // 기존 차트가 있으면 제거
+            if (window.myChart) {
+                window.myChart.destroy();
+            }
+            
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['매출 및 비용 분석'],
+                    datasets: [
+                        {
+                            label: '예상 월매출',
+                            data: [revenue],
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '고정 비용',
+                            data: [fixedCost],
+                            backgroundColor: '#e74c3c',
+                            borderColor: '#c0392b',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '변동 비용',
+                            data: [variableCost],
+                            backgroundColor: '#f39c12',
+                            borderColor: '#d35400',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '순수익',
+                            data: [profit],
+                            backgroundColor: '#2ecc71',
+                            borderColor: '#27ae60',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '금액 (원)'
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    </script>
+</body>
+</html>

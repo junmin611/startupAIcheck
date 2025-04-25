@@ -13,7 +13,7 @@ async function runDiagnosis() {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": "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",
+        "Authorization": "Bearer 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",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

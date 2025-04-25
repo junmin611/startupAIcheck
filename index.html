@@ -1,202 +1,53 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>창업자 매출 분석 서비스</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>AI 창업 자가진단</title>
+  <script defer src="main.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 3rem auto;
+      padding: 1rem;
+    }
+    textarea {
+      width: 100%;
+      height: 140px;
+      padding: 1rem;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #gptResponse {
+      margin-top: 2rem;
+      background: #f0f0f0;
+      padding: 1.5rem;
+      border-radius: 8px;
+      white-space: pre-wrap;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>창업 성공 내비게이터</h1>
-        <p>AI 기반 자가진단으로 창업 성공률을 높이세요</p>
-    </header>
-    
-    <div class="container">
-        <div class="hero">
-            <h1>창업 매출 분석 서비스</h1>
-            <p>AI가 제공하는 맞춤형 창업 자가진단과 매출 예측 서비스로 비즈니스의 성공 가능성을 높이세요</p>
-        </div>
-        
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('diagnosis')">자가진단</button>
-            <button class="tab" onclick="switchTab('calculator')">매출 계산기</button>
-            <button class="tab" onclick="switchTab('strategy')">매출 상승 전략</button>
-        </div>
-        
-        <div id="diagnosis" class="tab-content">
-            <div class="card">
-                <h2>창업자 자가진단 테스트</h2>
-                <p>AI가 당신의 창업 상황을 분석하고 맞춤형 성장 전략을 제공합니다.</p>
-                <div style="display: flex; gap: 20px; margin-top: 20px;">
-                    <button id="startDiagnosis" class="btn-primary">AI 자가진단 시작하기</button>
-                </div>
-            </div>
-        </div>
-        
-        <div id="calculator" class="tab-content" style="display: none;">
-            <div class="card">
-                <h2>예상 월매출 및 순수익 계산기</h2>
-                <form id="calculatorForm">
-                    <div class="form-group">
-                        <label for="price">제품/서비스 평균 가격 (원)</label>
-                        <input type="number" id="price" placeholder="ex: 20000" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="quantity">예상 월간 판매량 (개/건)</label>
-                        <input type="number" id="quantity" placeholder="ex: 100" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="fixedCost">월 고정 비용 (원)</label>
-                        <input type="number" id="fixedCost" placeholder="ex: 500000" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="variableCost">월 변동 비용 (원)</label>
-                        <input type="number" id="variableCost" placeholder="ex: 200000" required>
-                    </div>
-                    
-                    <button type="button" onclick="calculateProfit()">결과 계산하기</button>
-                </form>
-            </div>
-            
-            <div id="results" class="results">
-                <div class="result-card">
-                    <h2>예상 월매출</h2>
-                    <div id="revenue" class="result-value">0원</div>
-                </div>
-                
-                <div class="result-card">
-                    <h2>예상 순수익</h2>
-                    <div id="profit" class="result-value">0원</div>
-                </div>
-                
-                <div class="chart-container">
-                    <canvas id="profitChart"></canvas>
-                </div>
-                
-                <div class="card">
-                    <h2>분석 결과</h2>
-                    <div id="analysis"></div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="strategy" class="tab-content" style="display: none;">
-            <div class="card">
-                <h2>매출 상승 전략</h2>
-                <p>자가진단 테스트와 매출 계산기를 먼저 이용한 후, 맞춤형 매출 상승 전략을 받아보세요.</p>
-                <button style="margin-top: 20px;" onclick="alert('매출 상승 전략 서비스는 결제 후 이용 가능합니다.')">맞춤형 전략 받기 (유료)</button>
-            </div>
-        </div>
-        
-        <div class="next-steps">
-            <h2>창업 성공을 위한 6단계</h2>
-            <p>창업 성공을 위한 체계적인 단계를 따라가세요</p>
-            
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>자가진단 및 결과 분석</h3>
-                    <p>창업 아이디어와 계획에 대한 객관적인 분석 제공</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>예상 매출 분석</h3>
-                    <p>데이터 기반 매출과 수익 예측 시각화</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <h3>매출 상승 전략</h3>
-                    <p>AI 기반 맞춤형 전략 가이드</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>마케팅 교육</h3>
-                    <p>타겟 고객 발굴 및 효과적인 마케팅 전략</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">5</div>
-                    <h3>전문가 상담</h3>
-                    <p>분야별 전문가와의 1:1 상담 서비스</p>
-                </div>
-                
-                <div class="step">
-                    <div class="step-number">6</div>
-                    <h3>지속적 피드백</h3>
-                    <p>성과 분석 및 개선점 제시</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 자가진단 모달 -->
-    <div id="diagnosisModal" class="modal">
-        <div class="modal-content">
-            <span class="close" id="closeModal">&times;</span>
-            
-            <div id="questionContainer" class="question-container">
-                <h3 id="questionTitle">스타트업 자가진단 (1/5)</h3>
-                <p id="currentQuestion"></p>
-                <textarea id="answerInput" placeholder="답변을 입력해주세요"></textarea>
-                <button class="btn-primary" id="nextQuestion">다음 질문</button>
-            </div>
-            
-            <div id="resultContainer" class="result-container" style="display: none;">
-                <h3>진단 결과</h3>
-                
-                <div class="result-section">
-                    <h4>예상 월 매출액</h4>
-                    <p class="revenue" id="estimatedRevenue"></p>
-                </div>
-                
-                <div class="result-section">
-                    <h4>기본 분석</h4>
-                    <p id="basicAnalysis"></p>
-                </div>
-                
-                <div class="premium-box">
-                    <h4>상세 개선 전략 확인하기</h4>
-                    <p>더 자세한 맞춤형 성장 전략과 매출 향상 방법을 확인하려면 프리미엄 분석을 구매하세요.</p>
-                    <button class="btn-primary" id="showPayment">프리미엄 분석 구매 (29,900원)</button>
-                    
-                    <div id="paymentForm" class="payment-form">
-                        <div class="form-group">
-                            <label for="cardNumber">카드 번호</label>
-                            <input type="text" id="cardNumber" placeholder="0000-0000-0000-0000">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="expiry">만료일</label>
-                            <input type="text" id="expiry" placeholder="MM/YY">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cvv">CVV</label>
-                            <input type="password" id="cvv" placeholder="123" maxlength="3">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="cardName">카드 소유자 이름</label>
-                            <input type="text" id="cardName" placeholder="홍길동">
-                        </div>
-                        
-                        <button class="btn-primary" id="processPayment">29,900원 결제하기</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/diagnosis.js"></script>
+  <h1>예비창업자 AI 자가진단</h1>
+  <p>아래 질문에 답해보세요:</p>
+  <ul>
+    <li>1. 창업하고 싶은 업종은?</li>
+    <li>2. 위치(지역)는 어디인가요?</li>
+    <li>3. 초기 투자금은 얼마인가요?</li>
+    <li>4. 혼자 운영할 예정인가요, 몇 명이 함께하나요?</li>
+    <li>5. 목표 고객층은 누구인가요?</li>
+  </ul>
+  <textarea id="userInput" placeholder="예: 커피숍, 서울 강남, 5000만원, 2명 운영, 20~30대 직장인 등 입력해주세요."></textarea>
+  <button onclick="runDiagnosis()">진단 시작하기</button>
+  <div id="gptResponse"></div>
 </body>
 </html>
